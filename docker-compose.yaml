@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  mysql_master:
+    image: mysql:latest
+    container_name: mysql_master
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blogs
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    expose:
+      - '3306'
+    volumes:
+     - ./cnf/master.cnf:/etc/mysql/conf.d/my.cnf
+     - ./lib/mysql_master:/var/lib/mysql
+    networks:
+      - my_network
+  mysql_slave:
+    image: mysql:latest
+    container_name: mysql_slave
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blogs
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 3307:3306
+    expose:
+      - '3307'
+    volumes:
+      - ./cnf/slave.cnf:/etc/mysql/conf.d/my.cnf
+      - ./lib/mysql_slave:/var/lib/mysql
+    networks:
+      - my_network
+networks:
+  my_network:
+    driver: bridge
